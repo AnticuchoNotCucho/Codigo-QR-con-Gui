@@ -27,7 +27,7 @@ def valorQR():
     imageLabel.image = img
     
 def showtext():
-    texto2.config(text="Texto ingresado a QR: " +entry.get())
+    texto2.config(text="Texto ingresado a QR: " +entry.get(), fg="green")
 
 
 # funcion para agrupar funciones y ejecutarlas e un solo comando
@@ -37,13 +37,22 @@ def all_functions():
     showtext()
 
 
-#inicio de valores vacios
-img = tk.PhotoImage(file="")
-text = ""
 
-#generacion de QR
-
-
+#Validador de texto
+def validate():
+    
+    # validar que el texto no este vacio
+    if entry.get() == "":
+        print("No se puede generar un QR vacio")
+        texto2.config(text="No se puede generar un QR vacio", fg="red")
+        imageLabel.configure(image=tk.PhotoImage(file=""))
+        showQR.configure(state="disabled")
+        os.remove("QR.png")
+    # en caso de que el texto no este vacio, se ejecutan todas las funciones
+    else:
+        all_functions()
+        showQR.configure(state="normal")
+        
 #parametros de objetos tkinter
 frame = tk.Frame(height=500, width=500)
 
@@ -53,9 +62,9 @@ entry = tk.Entry(window, width=50)
 
 texto = tk.Label(window, text="Ingrese el texto que desea convertir a QR", font=("Arial", 12), fg="#A65E2E")
 
-texto2 = tk.Label(window, text="Esperando texto", font=("Arial", 12))
+texto2 = tk.Label(window, text="Esperando texto", font=("Arial", 12), fg="black")
 
-Generate = tk.Button(window, text="Generar QR", command=all_functions, width=40, height=2,background="#869B74", foreground="#FFFFFF")
+Generate = tk.Button(window, text="Generar QR", command=validate, width=40, height=2,background="#869B74", foreground="#FFFFFF")
 
 showQR =tk.Button(window, text="Guardar QR", command=lambda: os.system("QR.png") , width=40, height=2, background="#A65E2E", foreground="#FFFFFF")
 
@@ -70,5 +79,4 @@ showQR.pack()
 close.pack()
 window.mainloop()
 
-time.sleep(2)
 os.remove("QR.png")
